@@ -1,0 +1,62 @@
+# Generate Swagger UI documentation from main branch and deploy to Github Pages
+# 'api' subdirectory.
+
+name: "Build and Publish API Docs"
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+
+  prepare:
+    name: "Prepare OAS Artifacts"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Upload OAS Artifacts"
+        uses: actions/upload-artifact@v2
+        with:
+          name: spec-files
+          path: apis/*.json
+
+  build:
+    name: "Build API Docs"
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: "Download OAS Artifacts"
+        uses: actions/download-artifact@v2
+        with:
+          name: spec-files
+
+      - name: "Generate Swagger UI: documents"
+        uses: Legion2/swagger-ui-action@v1
+        with:
+          output: swagger-ui/documents
+          version: '^3.0.0'
+          spec-file: oft_documents.json
+
+      - name: "Upload Generated Docs"
+        uses: actions/upload-artifact@v2
+        with:
+          name: generated-docs
+          path: swagger-ui
+
+  deploy:
+    name: "Deploy Docs to GitHub Pages"
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Download Generated Docs"
+        uses: actions/download-artifact@v2
+        with:
+          name: generated-docs
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{steps.download.outputs.download-path}}
+          destination_dir: api
