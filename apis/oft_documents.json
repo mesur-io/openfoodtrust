@@ -1,0 +1,2153 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Open Food Trust Documents API",
+    "description": "The <b>Documents</b> API enables creation/upload, view and share capabilities of relevant supply chain documents of any type.\n\n## Document linking and focus\n\nA document can be linked to traceable elements such as facilities, products, and EPCs.  Linkage is supported by utilizing the <a href=\"https://json-ld.org/\"/>JSON-LD</a> data linking format.\n\n## Document sharing\n\nA document is created with `private` permissions by default. Private documents can be viewed only by registered\nusers in the organization that owns the document. Methods for sharing documents with other organizations are\ndescribed below.\n\n### Linked documents\n\nA linked document can be implicitly shared with other organizations by setting the document's `permissionsMode` to `linked`. Organizations with access to the document focus will be able to view the linked document, in their\ndocument library and trace results.\n\n### Explicitly shared documents\n\nBoth `private` and `linked` documents can be explicitly shared with organizations specified by `permittedOrgIds` in the permissions information.\n\n",
+    "contact": {},
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://TBD.com/oft/api/documents/v1",
+      "variables": {}
+    }
+  ],
+  "paths": {
+    "/documents": {
+      "post": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Creates a new document",
+        "description": "Creates a new document with the specified properties, content (via file upload) and permissions information.\n\n## Request body\n\nThe request body must include valid MIME `multipart/form-data`. While the properties piece is required, the `content` and `permissions` pieces are optional. By default permissions is set to `private` so that only the document owners can access it.\n\n### Properties \n\nThe required `properties` piece of the request body must be valid JSON with a defined `documentType` and the required properties for that document type. Call `GET /categories` to retrieve the defined document categories and types and `GET /templates/{documentType}` to retrieve a document template. Once created, the `documentType` cannot be changed.\n\nThe `issueDate` and `expiryDate` properties should be used to specify issue and expirations dates for the document. #### Custom properties\n\nCustom properties that aren't present in the schema can be set using the `customProperties` property by passing in an array. Each custom property in the array will need specify a `name` for the property and `value`. \n\n#### Properties example\n\nThe following example shows JSON syntax for both predefined and custom properties:\n\n```json\n{\n  \"documentType\": \"Generic Document\",\n  \"documentTitle\": \"CTR Report 1924\",\n  \"issueDate\": \"2019-12-01\",\n  \"customProperties\": [\n    {\n      \"name\": \"Site Location\",\n      \"value\": \"9501101530003\",\n      \"format\": \"gln\"\n    },\n    {\n      \"name\": \"Site Age\",\n      \"value\": 5\n    },\n    {\n      \"name\": \"Related product\",\n      \"value\": \"95011015300038\",\n      \"format\": \"gtin\"\n    }\n  ]\n}\n```\n\n## Content\n\nThe `content` piece of the request body specifies the document file to be uploaded.\nSpecifying the `content` is optional.\n\n##Permissions\n\nThe `permissions` part (JSON) of the request body specifies the document permissions. The default document permissions is set to `private`limiting access to only the document owners. In order to give access to other organizations use the `permittedOrgIds` property\n\n## Responses\n\nDocument upload is asynchronous. A `POST /documents` request will either return an HTTP 201 (Created) or HTTP 202 (Accepted) response depending on if the document was created or is still processing. An HTTP 201 response indicates the document was successfully created and returns the newly created document ID (`id`).\n\nAn HTTP 202 response (Accepted) means that the document is still being created (perhaps due to size) and a transaction ID (`correlationId`) and document ID (`id`) are returned. Use the returned `correlationId` in a `GET /transactions` call to get the status of the document upload.\n",
+        "operationId": "Createsanewdocument",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "encoding": {},
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "properties": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "permissions": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentCreatedResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Accepted",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentCreatedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "get": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Retrieves a list of documents",
+        "description": "Retrieves data about the supplied array of documents such as their properties and attachments.\nUse `GET /documents/{docId}/content` to retrieve the contents of the documents.\n",
+        "operationId": "Retrievesalistofdocuments",
+        "parameters": [
+          {
+            "name": "docIds",
+            "in": "query",
+            "description": "Array of document IDs",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Document"
+                  },
+                  "description": "OK"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/documents/{docId}": {
+      "get": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Retrieves a document",
+        "description": "Retrieves data about a specific document such as its properties and attachments.\nUse `GET /documents/{docId}/content` to retrieve the content of the document.\n",
+        "operationId": "Retrievesadocument",
+        "parameters": [
+          {
+            "name": "docId",
+            "in": "path",
+            "description": "Document ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "description": "Document version",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Document"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "put": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Updates a document",
+        "description": "Updates a document's properties and, optionally, permissions and content.\nA successful update of a document will result in an increase in the version number\n\nThe request body's MIME type should be `application/json`\n",
+        "operationId": "Updatesadocument",
+        "parameters": [
+          {
+            "name": "docId",
+            "in": "path",
+            "description": "Document ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "encoding": {},
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "properties": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "permissions": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentUpdatedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Deletes a document",
+        "description": "Deletes the document from the system.\n",
+        "operationId": "Deletesadocument",
+        "parameters": [
+          {
+            "name": "docId",
+            "in": "path",
+            "description": "Document ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/documents/{docId}/content": {
+      "get": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Retrieves the content of a document",
+        "description": "If the document has content, it will be retrieved.\n",
+        "operationId": "Retrievesadocument'scontent",
+        "parameters": [
+          {
+            "name": "docId",
+            "in": "path",
+            "description": "Document ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "description": "Document version",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "OK",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "put": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Updates the content of a document",
+        "description": "Uploads a file to the document.\nA successful upload will result in the document version being increased.\n",
+        "operationId": "Updatesadocument'scontent",
+        "parameters": [
+          {
+            "name": "docId",
+            "in": "path",
+            "description": "Document ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "encoding": {},
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentUpdatedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/documents/{docId}/permissions": {
+      "get": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Retrieves the permissions information of a document",
+        "description": "Retrieves the permissions information of a document\n",
+        "operationId": "Retrievesadocument'spermissionsinformation",
+        "parameters": [
+          {
+            "name": "docId",
+            "in": "path",
+            "description": "Document ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/permissionsInfo"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "put": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Updates a document's permissions",
+        "description": "Updating the permissions will not change the version number of the document. Both `permissionsMode` and `permittedOrgIds` should be present to properly update the document\n",
+        "operationId": "Updatesadocument'spermissionsinformation",
+        "parameters": [
+          {
+            "name": "docId",
+            "in": "path",
+            "description": "Document ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Permissions information",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PermissionsInfo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PermissionsInfo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/documents/search": {
+      "post": {
+        "tags": [
+          "Search"
+        ],
+        "summary": "Searches for documents",
+        "description": "Searches across all documents using the provided parameters.\nThe full properties and contents of the documents will not be used to reduce load.  Other calls should be used to retrieve the full set of document information.\n",
+        "operationId": "Searchesdocuments",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limits the total number of document summaries returned. Valid range is 0 thru 1000.",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 500
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Start position for the next set of paginated document summaries.",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 0
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Specifies whether to retrieve the total count of document summaries that match the search conditions.",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Must be valid JSON.  Supported search conditions are TBD\n",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchConditions"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResults"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/documents/{docId}/attachments": {
+      "post": {
+        "tags": [
+          "Attachments"
+        ],
+        "summary": "Creates a new document attachment",
+        "description": "Adds and uploads a new attachment to the document. A successful upload will result in the version number being increased.\n",
+        "operationId": "Createsanewattachment",
+        "parameters": [
+          {
+            "name": "docId",
+            "in": "path",
+            "description": "Document ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "encoding": {},
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttachmentCreatedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/documents/{docId}/attachments/{attachmentId}": {
+      "get": {
+        "tags": [
+          "Attachments"
+        ],
+        "summary": "Attachment retrieval",
+        "description": "Retrieves a specific attachment from a specific document.\n",
+        "operationId": "Retrievesanattachment",
+        "parameters": [
+          {
+            "name": "docId",
+            "in": "path",
+            "description": "Document ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "attachmentId",
+            "in": "path",
+            "description": "attachment ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "OK",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "put": {
+        "tags": [
+          "Attachments"
+        ],
+        "summary": "Updates a document's attachment",
+        "description": "Updates a documents attachment.\nA successful upload will increase the document's version number\n",
+        "operationId": "Updatesanattachment",
+        "parameters": [
+          {
+            "name": "docId",
+            "in": "path",
+            "description": "Document ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "attachmentId",
+            "in": "path",
+            "description": "attachment ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "encoding": {},
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttachmentUpdatedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "Attachments"
+        ],
+        "summary": "Attachment deletion",
+        "description": "Deletes a documents attechment.\nA successful deletion will result in the version number being increased.\n",
+        "operationId": "Deletesanattachment",
+        "parameters": [
+          {
+            "name": "docId",
+            "in": "path",
+            "description": "Document ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "attachmentId",
+            "in": "path",
+            "description": "attachment ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/transactions": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "summary": "Document transaction status",
+        "description": "Returns the status document trasnactions that may be in progress. These transactions are identified using correlation IDs that were returned when the transaction was begun.\n",
+        "operationId": "Retrievesthestatusofdocumenttransactions",
+        "parameters": [
+          {
+            "name": "correlationIds",
+            "in": "query",
+            "description": "Array of correlation IDs, obtained from previous create or update requests.",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Transaction"
+                  },
+                  "description": "OK"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/categories": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Retrieves document categories",
+        "description": "If document categories are desired, a map is returned of the specified categories\n",
+        "operationId": "Retrievesthedocumentcategory/typemap",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryMap"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/templates/{documentType}": {
+      "get": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Document type template retrieval",
+        "description": "If needed, a template for a specific document type can be returned.\nThese templates could be used to define schema or in validating and rendering documents, for example.\n",
+        "operationId": "Retrievesadocumenttypetemplate",
+        "parameters": [
+          {
+            "name": "documentType",
+            "in": "path",
+            "description": "Document type name",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Template"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerError"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PermissionsInfo": {
+        "title": "PermissionsInfo",
+        "type": "object",
+        "properties": {
+          "permissionsMode": {
+            "$ref": "#/components/schemas/PermissionsMode"
+          },
+          "permittedOrgIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Organization IDs permitted to access the document"
+          }
+        }
+      },
+      "PermissionsMode": {
+        "title": "PermissionsMode",
+        "enum": [
+          "linked",
+          "private"
+        ],
+        "type": "string",
+        "description": "Permissions mode"
+      },
+      "DocumentProperties": {
+        "title": "DocumentProperties",
+        "type": "object",
+        "properties": {
+          "documentType": {
+            "type": "string",
+            "description": "Document type",
+            "example": "Generic Document"
+          },
+          "documentTitle": {
+            "type": "string",
+            "description": "Document title",
+            "example": "CTR Report"
+          }
+        }
+      },
+      "Document": {
+        "title": "Document",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Document ID"
+          },
+          "orgId": {
+            "type": "string",
+            "description": "Organization ID"
+          },
+          "version": {
+            "type": "integer",
+            "description": "Document version",
+            "format": "int32",
+            "example": 1
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Version timestamp",
+            "example": "2019-09-12T03:04:23+00:00"
+          },
+          "permissions": {
+            "$ref": "#/components/schemas/PermissionsInfo"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          "properties": {
+            "$ref": "#/components/schemas/DocumentProperties"
+          },
+          "content": {
+            "$ref": "#/components/schemas/Content"
+          },
+          "attachments": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Attachments"
+            }
+          }
+        }
+      },
+      "SearchConditions": {
+        "title": "SearchConditions",
+        "type": "object",
+        "properties": {
+          "orgId": {
+            "type": "string",
+            "example": "org12345"
+          },
+          "orgIdNot": {
+            "type": "string",
+            "example": "org12345"
+          },
+          "timestamp": {
+            "$ref": "#/components/schemas/Timestamp"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          "properties": {
+            "$ref": "#/components/schemas/Properties"
+          }
+        }
+      },
+      "DocumentSummary": {
+        "title": "DocumentSummary",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "orgId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number",
+            "example": 1
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          "properties": {
+            "$ref": "#/components/schemas/Properties1"
+          }
+        }
+      },
+      "SearchResults": {
+        "title": "SearchResults",
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number",
+            "example": 100
+          },
+          "documentSummaries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentSummary"
+            },
+            "description": ""
+          }
+        }
+      },
+      "Transaction": {
+        "title": "Transaction",
+        "type": "object",
+        "properties": {
+          "correlationId": {
+            "type": "string",
+            "description": "Correlation ID",
+            "example": "cor12345"
+          },
+          "transactionStatus": {
+            "$ref": "#/components/schemas/TransactionStatus"
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "CategoryMap": {
+        "title": "CategoryMap",
+        "type": "object",
+        "properties": {
+          "Certificate": {
+            "$ref": "#/components/schemas/Certificate"
+          },
+          "Other": {
+            "$ref": "#/components/schemas/Other"
+          }
+        }
+      },
+      "Template": {
+        "title": "Template",
+        "type": "object",
+        "properties": {
+          "schema": {
+            "$ref": "#/components/schemas/Schema"
+          },
+          "ui": {
+            "$ref": "#/components/schemas/Ui"
+          }
+        }
+      },
+      "UnauthorizedError": {
+        "title": "UnauthorizedError",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error Code",
+            "example": "unauthorized"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message (no translations)",
+            "example": "User Unauthorized: Invalid token provided"
+          }
+        }
+      },
+      "InternalServerError": {
+        "title": "InternalServerError",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code",
+            "example": "genericError"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message (no translations)",
+            "example": "An unexpected error has occurred"
+          }
+        }
+      },
+      "AttachmentCreatedResponse": {
+        "title": "AttachmentCreatedResponse",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "attachment ID",
+            "example": "att123"
+          }
+        }
+      },
+      "Attachments": {
+        "title": "Attachments",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Attachment ID"
+          },
+          "filename": {
+            "type": "string",
+            "description": "Attachment filename"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "MIME content type",
+            "example": "application/pdf"
+          }
+        }
+      },
+      "AttachmentUpdatedResponse": {
+        "title": "AttachmentUpdatedResponse",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "attachment ID",
+            "example": "att123"
+          }
+        }
+      },
+      "Certificate": {
+        "title": "Certificate",
+        "type": "object",
+        "properties": {
+          "documentTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentType"
+            },
+            "description": ""
+          }
+        }
+      },
+      "Content": {
+        "title": "Content",
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "filename"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "MIME content type",
+            "example": "application/pdf"
+          }
+        }
+      },
+      "DocumentCreatedResponse": {
+        "title": "DocumentCreatedResponse",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Document ID",
+            "example": "doc123"
+          }
+        }
+      },
+      "DocumentType": {
+        "title": "DocumentType",
+        "type": "object",
+        "properties": {
+          "documentType": {
+            "type": "string",
+            "example": "Generic Certificate"
+          }
+        }
+      },
+      "DocumentType2": {
+        "title": "DocumentType2",
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Description of the documentType property",
+            "example": "Type of document"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the documentType property",
+            "example": "string"
+          },
+          "minLength": {
+            "type": "number",
+            "description": "Validator for string min length of the documentType property",
+            "example": 1
+          }
+        }
+      },
+      "DocumentUpdatedResponse": {
+        "title": "DocumentUpdatedResponse",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Document ID",
+            "example": "doc123"
+          }
+        }
+      },
+      "ExpiryDate": {
+        "title": "ExpiryDate",
+        "type": "object",
+        "properties": {
+          "inRange": {
+            "$ref": "#/components/schemas/InRange"
+          }
+        }
+      },
+      "InRange": {
+        "title": "InRange",
+        "type": "object",
+        "properties": {
+          "lower": {
+            "type": "string"
+          },
+          "upper": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "lower": "2019-10-01T00:00:00+00:00"
+        }
+      },
+      "Other": {
+        "title": "Other",
+        "type": "object",
+        "properties": {
+          "documentTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentType"
+            },
+            "description": ""
+          }
+        }
+      },
+      "Properties": {
+        "title": "Properties",
+        "type": "object",
+        "properties": {
+          "documentType": {
+            "type": "string",
+            "example": "GAA BAP Certificate"
+          },
+          "documentTitle": {
+            "type": "string",
+            "example": "CTR Report 2006"
+          },
+          "expiryDate": {
+            "$ref": "#/components/schemas/ExpiryDate"
+          },
+          "locationGLNList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          "epcList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          "productList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          "eventIDList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          "transactionIDList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        }
+      },
+      "Properties1": {
+        "title": "Properties1",
+        "type": "object",
+        "properties": {
+          "documentType": {
+            "type": "string"
+          },
+          "documentTitle": {
+            "type": "string"
+          },
+          "issueDate": {
+            "type": "string"
+          },
+          "expiryDate": {
+            "type": "string"
+          },
+          "locationGLNList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          "epcList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          "productList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          "eventIDList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          "transactionIDList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        }
+      },
+      "Properties2": {
+        "title": "Properties2",
+        "type": "object",
+        "properties": {
+          "documentType": {
+            "$ref": "#/components/schemas/DocumentType2"
+          }
+        }
+      },
+      "Schema": {
+        "title": "Schema",
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Description of a document type",
+            "example": "Document definition for a facility certificate"
+          },
+          "required": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of the template",
+            "example": "object"
+          },
+          "properties": {
+            "$ref": "#/components/schemas/Properties2"
+          }
+        }
+      },
+      "Timestamp": {
+        "title": "Timestamp",
+        "type": "object",
+        "properties": {
+          "inRange": {
+            "$ref": "#/components/schemas/InRange"
+          }
+        }
+      },
+      "TransactionStatus": {
+        "title": "TransactionStatus",
+        "enum": [
+          "success",
+          "failed",
+          "documentError",
+          "pending",
+          "notFound"
+        ],
+        "type": "string",
+        "description": "Transaction status"
+      },
+      "Ui": {
+        "title": "Ui",
+        "type": "object",
+        "properties": {
+          "properties": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Documents",
+      "description": ""
+    },
+    {
+      "name": "Search",
+      "description": ""
+    },
+    {
+      "name": "Attachments",
+      "description": ""
+    },
+    {
+      "name": "Transactions",
+      "description": ""
+    },
+    {
+      "name": "Categories",
+      "description": ""
+    },
+    {
+      "name": "Templates",
+      "description": ""
+    }
+  ]
+}
