@@ -37,6 +37,11 @@ jobs:
           output: swagger-ui/documents
           version: '^3.0.0'
           spec-file: oft_documents.json
+      
+      - name: redoc-cli docs
+        uses: seeebiii/redoc-cli-github-action@v9
+        with:
+          args: 'bundle oft_documents.json --output swagger-ui/index.html'
 
       - name: "Upload Generated Docs"
         uses: actions/upload-artifact@v2

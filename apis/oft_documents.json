@@ -702,7 +702,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/permissionsInfo"
+                  "$ref": "#/components/schemas/PermissionsInfo"
                 }
               }
             }
