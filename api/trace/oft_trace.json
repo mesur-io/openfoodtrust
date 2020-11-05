@@ -1,0 +1,4000 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.1.0",
+    "title": "Open Food Trust Trace API",
+    "description": "The OFT Trace API enables users to create, read, update, and delete trace information for their entity's food supply chain events, transactions, products and facilities.",
+    "contact": {}
+  },
+  "host": "mesur.io",
+  "basePath": "/oft/api/trace/v1",
+  "securityDefinitions": {},
+  "schemes": [],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/products": {
+      "get": {
+        "description": "Retrieves product information",
+        "summary": "Retrieves product information",
+        "tags": [
+          "Products"
+        ],
+        "operationId": "get_products",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "entity_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Array of entity IDs."
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "A general search string used to return matching product data."
+          },
+          {
+            "name": "asset_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of asset IDs, such as lots and serials."
+          },
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of product IDs."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": "A numerical limit to the number of records initially returned.  Paging can then be used via the `startPage` parameter for futher retrieval. Default limit 500."
+          },
+          {
+            "name": "startPage",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Specifies the record number at which to start the page of results. The number of records returned will be based on the `limit` parameter."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/products"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Input Parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a new product",
+        "summary": "Creates a new product",
+        "tags": [
+          "Products"
+        ],
+        "operationId": "post_products",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Request Body",
+            "in": "body",
+            "required": false,
+            "description": "Request body with the parameters for product post.",
+            "schema": {
+              "$ref": "#/definitions/productsPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/products"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/products/{product_id}":{
+      "put": {
+        "description": "Updates an existing product",
+        "summary": "Updates an existing product",
+        "tags": [
+          "Products"
+        ],
+        "operationId": "put_products",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "Product ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Request Body",
+            "in": "body",
+            "required": false,
+            "description": "Request body with updates to the product entry.",
+            "schema": {
+              "$ref": "#/definitions/productsPutRequest"
+            }
+          }
+        ],
+        
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/products"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Deletes a product",
+        "description": "Deletes the product from the system.",
+        "operationId": "delete_products",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "Product ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/locations": {
+      "get": {
+        "description": "Retrieves information on the facility location",
+        "summary": "get_locations",
+        "tags": [
+          "Locations"
+        ],
+        "operationId": "get_locations",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "entity_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Array of entity IDs."
+          },
+          {
+            "name": "location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of location IDs."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": "A numerical limit to the number of records initially returned.  Paging can then be used for further retrieval. Default limit 500."
+          },
+          {
+            "name": "startPage",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Specifies the record number at which to start the page of results. The number of records returned will be based on the `limit` parameter."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/locations"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a new location entry.",
+        "summary": "Creates a new location entry.",
+        "tags": [
+          "Locations"
+        ],
+        "operationId": "post_locations",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Request Body",
+            "in": "body",
+            "required": false,
+            "description": "Parameters of the location to post.",
+            "schema": {
+              "$ref": "#/definitions/locationsPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/locations"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/location/{location_id}":{
+      "put": {
+        "description": "Updates an existing location",
+        "summary": "Updates an existing location",
+        "tags": [
+          "Locations"
+        ],
+        "operationId": "put_locations",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Request Body",
+            "in": "body",
+            "required": false,
+            "description": "Parameters of the location to update.",
+            "schema": {
+              "$ref": "#/definitions/locationsPutRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/locations"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Locations"
+        ],
+        "summary": "Deletes a location",
+        "description": "Deletes the location from the system.",
+        "operationId": "delete_locations",
+        "parameters": [
+          {
+            "name": "location_id",
+            "in": "path",
+            "description": "Location ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metadata": {
+      "get": {
+        "description": "Retrieves metadata related to items such as products, locations, etc.",
+        "summary": "get_metadata",
+        "tags": [
+          "Metadata"
+        ],
+        "operationId": "get_metadata",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "metadata_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of IDs for metadata."
+          },
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of product IDs."
+          },
+          {
+            "name": "entity_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Array of entity IDs."
+          },
+          {
+            "name": "location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of location IDs."
+          },
+          {
+            "name": "event_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of event identifiers."
+          },
+          {
+            "name": "metadata_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Returns records with a payload timestamp on or after the timestamp provided"
+          },
+          {
+            "name": "metadata_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Returns records with a payload timestamp strictly before the timestamp provided"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": "A numerical limit to the number of records initially returned.  Paging can then be used for further retrieval. Default limit 500."
+          },
+          {
+            "name": "startPage",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Specifies the record number at which to start the page of results. The number of records returned will be based on the `limit` parameter."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/metadata"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a new metadata entry.",
+        "summary": "Creates a new metadata entry.",
+        "tags": [
+          "Metadata"
+        ],
+        "operationId": "post_metadata",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Request Body",
+            "in": "body",
+            "required": false,
+            "description": "Parameters of the metadata to post.",
+            "schema": {
+              "$ref": "#/definitions/metadataPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/metadata"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/metadata/{metadata_id}":{
+      "put": {
+        "description": "Updates existing metadata entry",
+        "summary": "Updates an existing metadata entry",
+        "tags": [
+          "Metadata"
+        ],
+        "operationId": "put_metadata",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Request Body",
+            "in": "body",
+            "required": false,
+            "description": "Parameters of the metadata to update.",
+            "schema": {
+              "$ref": "#/definitions/metadataPutRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/metadata"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Deletes a metadata entry",
+        "description": "Deletes the entry from the system.",
+        "operationId": "delete_metadata",
+        "parameters": [
+          {
+            "name": "metadata_id",
+            "in": "path",
+            "description": "Metadata ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/events": {
+      "get": {
+        "description": "Retrieves details of events",
+        "summary": "Retrieves events",
+        "tags": [
+          "Events"
+        ],
+        "operationId": "get_events",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "entity_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Array of entity IDs."
+          },
+          {
+            "name": "asset_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Return records with the asset identifiers provided."
+          },
+          {
+            "name": "location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of location IDs."
+          },
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of product IDs."
+          },
+          {
+            "name": "event_type[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of event types."
+          },
+          {
+            "name": "transaction_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of IDs for the business transaction."
+          },
+          {
+            "name": "transaction_type[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array transaction types to retrieve records."
+          },
+          {
+            "name": "step[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of Business Step IDs"
+          },
+          {
+            "name": "event_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Returns results based on events on or after the provided timestamp."
+          },
+          {
+            "name": "event_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Returns results based on events before the provided timestamp."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": "A numerical limit to the number of records initially returned.  Paging can then be used for further retrieval. Default limit 500."
+          },
+          {
+            "name": "startPage",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Specifies the record number at which to start the page of results. The number of records returned will be based on the `limit` parameter."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/events"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a new event entry.",
+        "summary": "Creates a new event entry.",
+        "tags": [
+          "Events"
+        ],
+        "operationId": "post_event",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Request Body",
+            "in": "body",
+            "required": false,
+            "description": "Parameters of the event to post.",
+            "schema": {
+              "$ref": "#/definitions/eventPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/event"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/events/{event_id}":{
+      "put": {
+        "description": "Updates existing event entry",
+        "summary": "Updates an existing event entry",
+        "tags": [
+          "Events"
+        ],
+        "operationId": "put_events",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Request Body",
+            "in": "body",
+            "required": false,
+            "description": "Parameters of the event to update.",
+            "schema": {
+              "$ref": "#/definitions/eventPutRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/event"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Deletes a event entry",
+        "description": "Deletes the entry from the system.",
+        "operationId": "delete_event",
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "path",
+            "description": "Event ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assets": {
+      "get": {
+        "description": "Finds an asset of any type, whether it be a lot, serial, or EPC.",
+        "summary": "get_assets",
+        "tags": [
+          "Assets"
+        ],
+        "operationId": "get_assets",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of product IDs."
+          },
+          {
+            "name": "asset_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of EPC, lot or serial IDs."
+          },
+          {
+            "name": "asset_type",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of asset types."
+          },
+          {
+            "name": "event_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Returns results based on events on or after the provided timestamp."
+          },
+          {
+            "name": "event_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Returns results based on events before the provided timestamp."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": "A numerical limit to the number of records initially returned.  Paging can then be used for further retrieval. Default limit 500."
+          },
+          {
+            "name": "startPage",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Specifies the record number at which to start the page of results. The number of records returned will be based on the `limit` parameter."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "schema": {
+              "$ref": "#/definitions/assets"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a new asset entry.",
+        "summary": "Creates a new asset entry.",
+        "tags": [
+          "Assets"
+        ],
+        "operationId": "post_asset",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Request Body",
+            "in": "body",
+            "required": false,
+            "description": "Parameters of the asset to post.",
+            "schema": {
+              "$ref": "#/definitions/assetsPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/event"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/assets/{asset_id}":{
+      "put": {
+        "description": "Updates existing asset entry",
+        "summary": "Updates an existing asset entry",
+        "tags": [
+          "Assets"
+        ],
+        "operationId": "put_assets",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Request Body",
+            "in": "body",
+            "required": false,
+            "description": "Parameters of the event to update.",
+            "schema": {
+              "$ref": "#/definitions/assetsPutRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/event"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Assets"
+        ],
+        "summary": "Deletes an asset entry",
+        "description": "Deletes the entry from the system.",
+        "operationId": "delete_asset",
+        "parameters": [
+          {
+            "name": "asset_id",
+            "in": "path",
+            "description": "Asset ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assets/{asset_id}/trace": {
+      "get": {
+        "description": "Retrieve a consumer trace for a specific lot, serial, or pallet\n",
+        "summary": "retrieve a trace for a specific lot, serial, or pallet",
+        "tags": [
+          "Assets"
+        ],
+        "operationId": "retrieveatraceforaspecificlot,serial,orpallet",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "asset_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "EPC of lot, serial, pallet, or GRAI to trace"
+          },
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of product IDs."
+          },
+          {
+            "name": "depth",
+            "in": "query",
+            "required": false,
+            "default": 5,
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1.0,
+            "maximum": 10.0,
+            "exclusiveMaximum": false,
+            "exclusiveMinimum": false,
+            "description": "Returns the number of steps to traverse in the trace."
+          },
+          {
+            "name": "upstream",
+            "in": "query",
+            "required": false,
+            "default": true,
+            "type": "boolean",
+            "description": "Boolean value indicating whether or not to trace upstream."
+          },
+          {
+            "name": "downstream",
+            "in": "query",
+            "required": false,
+            "default": true,
+            "type": "boolean",
+            "description": "Boolean value indicating whether or not to trace downstream."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "schema": {
+              "$ref": "#/definitions/assetsTraceResponse"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/ilmds": {
+      "get": {
+        "description": "Retrieves imld data related to assets and products.",
+        "summary": "Retrieves imld data",
+        "tags": [
+          "Assets"
+        ],
+        "operationId": "get_ilmds",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "asset_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "best_before_date_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "best_before_date_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "first_freeze_date_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "first_freeze_date_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "harvest_start_date_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "harvest_start_date_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "harvest_end_date_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "harvest_end_date_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "item_expiration_date_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "item_expiration_date_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "sell_by_date_start_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "sell_by_date_end_timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": ""
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ilmd data matching criteria",
+            "schema": {
+              "$ref": "#/definitions/ilmds"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Creates new ilmd entry.",
+        "summary": "Creates new ilmd entry",
+        "tags": [
+          "Assets"
+        ],
+        "operationId": "post_ilmds",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Request Body",
+            "in": "body",
+            "required": false,
+            "description": "Object to submit post a new ilmds entry.",
+            "schema": {
+              "$ref": "#/definitions/ilmdsPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ilmd data matching criteria",
+            "schema": {
+              "$ref": "#/definitions/ilmds"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/ilmds/{ilmds_id}":{
+      "put": {
+        "description": "Updates existing ilmds entry",
+        "summary": "Updates an existing ilmds entry",
+        "tags": [
+          "Assets"
+        ],
+        "operationId": "put_ilmds",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Request Body",
+            "in": "body",
+            "required": false,
+            "description": "Parameters of the ilmds record to update.",
+            "schema": {
+              "$ref": "#/definitions/ilmdsPutRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ilmds"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Assets"
+        ],
+        "summary": "Deletes an ilmds entry",
+        "description": "Deletes the entry from the system.",
+        "operationId": "delete_ilmds",
+        "parameters": [
+          {
+            "name": "ilmds_id",
+            "in": "path",
+            "description": "Ilmds ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/entities": {
+      "get": {
+        "description": "Retrieves information for entities.\n",
+        "summary": "get_entities",
+        "tags": [
+          "Entities"
+        ],
+        "operationId": "get_entities",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "entity_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Array of entity IDs."
+          },
+          {
+            "name": "entity_name[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of entity names."
+          },
+          {
+            "name": "company_prefix[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of company prefixes."
+          },
+          {
+            "name": "asset_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of EPC or relevant product identifiers."
+          },
+          {
+            "name": "product_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of product IDs."
+          },
+          {
+            "name": "location_id[]",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of location IDs to use in returning records."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "default": 500.0,
+            "type": "number",
+            "format": "double",
+            "description": "A numerical limit to the number of records initially returned.  Paging can then be used for further retrieval. Default limit 500."
+          },
+          {
+            "name": "startPage",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Specifies the record number at which to start the page of results. The number of records returned will be based on the `limit` parameter."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/entities"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Creates new entity entry.",
+        "summary": "Creates new entity entry",
+        "tags": [
+          "Entities"
+        ],
+        "operationId": "post_entities",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Request Body",
+            "in": "body",
+            "required": false,
+            "description": "Object to post a new entity entry.",
+            "schema": {
+              "$ref": "#/definitions/entitiesPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "entity data matching criteria",
+            "schema": {
+              "$ref": "#/definitions/entities"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/entities/{entity_id}":{
+      "put": {
+        "description": "Updates existing entity entry",
+        "summary": "Updates an existing entity entry",
+        "tags": [
+          "Entities"
+        ],
+        "operationId": "put_entity",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Request Body",
+            "in": "body",
+            "required": false,
+            "description": "Parameters of the entity record to update.",
+            "schema": {
+              "$ref": "#/definitions/entitiesPutRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/entity"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Entities"
+        ],
+        "summary": "Deletes an entity entry",
+        "description": "Deletes the entry from the system.",
+        "operationId": "delete_entities",
+        "parameters": [
+          {
+            "name": "entity_id",
+            "in": "path",
+            "description": "Entity ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sources": {
+      "get": {
+        "description": "Returns assets used as source materials for other assets.  For example, avocados used to make guacamole.",
+        "summary": "retrieve source material",
+        "tags": [
+          "Sources"
+        ],
+        "operationId": "retrievesourcematerial",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "asset_id[]",
+            "in": "query",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Returns records with the asset identifiers (URN) provided."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/sources"
+            },
+            "headers": {}
+          }
+        }
+      },
+      "post": {
+        "description": "Creates new source entry.",
+        "summary": "Creates new source entry",
+        "tags": [
+          "Sources"
+        ],
+        "operationId": "post_sources",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Request Body",
+            "in": "body",
+            "required": false,
+            "description": "Object to post a new source entry.",
+            "schema": {
+              "$ref": "#/definitions/sourcesPostRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "source data matching criteria",
+            "schema": {
+              "$ref": "#/definitions/sources"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      }
+    },
+    "/sources/{source_id}":{
+      "put": {
+        "description": "Updates existing sources entry",
+        "summary": "Updates an existing sources entry",
+        "tags": [
+          "Sources"
+        ],
+        "operationId": "put_source",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Request Body",
+            "in": "body",
+            "required": false,
+            "description": "Parameters of the source record to update.",
+            "schema": {
+              "$ref": "#/definitions/sourcesPutRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/sources"
+            },
+            "headers": {}
+          },
+          "400": {
+            "description": "bad input parameter",
+            "schema": {
+              "$ref": "#/definitions/errorModel"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Sources"
+        ],
+        "summary": "Deletes an sources entry",
+        "description": "Deletes the entry from the system.",
+        "operationId": "delete_source",
+        "parameters": [
+          {
+            "name": "source_id",
+            "in": "path",
+            "description": "Source ID",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "headers": {}
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/errorModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "assetQty": {
+      "title": "assetQty",
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "number",
+          "format": "double"
+        },
+        "uom": {
+          "type": "string"
+        }
+      }
+    },
+    "products": {
+      "title": "products",
+      "type": "object",
+      "properties": {
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/product"
+          }
+        },
+        "next": {
+          "$ref": "#/definitions/next"
+        }
+      }
+    },
+    "product": {
+      "title": "product",
+      "example": {
+        "id": "urn:product:class:0048562.chicken",
+        "entity_id": "string",
+        "description": "Demo: fresh chicken",
+        "object_sku": "03485JDSIJ"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "entity_id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "object_sku": {
+          "type": "string"
+        }
+      }
+    },
+    "locations": {
+      "title": "locations",
+      "type": "object",
+      "properties": {
+        "locations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/location"
+          }
+        },
+        "next": {
+          "$ref": "#/definitions/next"
+        }
+      }
+    },
+    "location": {
+      "title": "location",
+      "example": {
+        "id": "9876543example",
+        "entity_id": "string",
+        "location_type": "FARM",
+        "location_name": "Bia Orchards",
+        "street_address": "123 Jakers Street",
+        "city": "Middlefield",
+        "country_code": "US",
+        "po_box_number": "null",
+        "postal_code": "06455",
+        "state": "CT",
+        "latitude": 0,
+        "longitude": 0
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "entity_id": {
+          "type": "string"
+        },
+        "location_type": {
+          "type": "string"
+        },
+        "street_address": {
+          "type": "string"
+        },
+        "location_name": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country_code": {
+          "type": "string"
+        },
+        "po_box_number": {
+          "type": "string"
+        },
+        "postal_code": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "assets": {
+      "title": "assets",
+      "type": "object",
+      "properties": {
+        "assets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/asset"
+          }
+        }
+      }
+    },
+    "asset": {
+      "title": "asset",
+      "example": {
+        "id": "thisAssetID",
+        "product_id": "productIDExample"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "product_id": {
+          "type": "string"
+        }
+      }
+    },
+    "assetsPostRequest": {
+      "title": "assetsPostRequest",
+      "example": {
+        "id": "thisAssetID",
+        "asset_type":"pallet",
+        "product_id": "productIDExample"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "asset_type": {
+          "type": "string"
+        },
+        "product_id": {
+          "type": "string"
+        }
+      }
+    },
+    "assetsPutRequest": {
+      "title": "assetsPostRequest",
+      "example": {
+        "id": "thisAssetID",
+        "asset_type":"pallet",
+        "product_id": "productIDExample"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "asset_type": {
+          "type": "string"
+        },
+        "product_id": {
+          "type": "string"
+        }
+      }
+    },
+    "ilmdsPostRequest": {
+      "title": "ilmdsPostRequest",
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ilmd"
+          }
+        }
+      }
+    },
+    "ilmdsPutRequest": {
+      "title": "ilmdsPutRequest",
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ilmd"
+          }
+        }
+      }
+    },
+    "ilmds": {
+      "title": "ilmds",
+      "type": "object",
+      "properties": {
+        "ilmds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ilmd"
+          }
+        }
+      }
+    },
+    "ilmd": {
+      "title": "ilmd",
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "additional_trade_item_identification": {
+          "type": "string"
+        },
+        "additional_trade_item_identification_type": {
+          "type": "string"
+        },
+        "lot_number": {
+          "type": "string"
+        },
+        "functional_name": {
+          "type": "string"
+        },
+        "regulated_product_name": {
+          "type": "string"
+        },
+        "trade_item_description": {
+          "type": "string"
+        },
+        "strength_description": {
+          "type": "string"
+        },
+        "net_content_description": {
+          "type": "string"
+        },
+        "description_short": {
+          "type": "string"
+        },
+        "label_description": {
+          "type": "string"
+        },
+        "drained_weight": {
+          "type": "string"
+        },
+        "drained_weight_uom": {
+          "type": "string"
+        },
+        "gross_weight": {
+          "type": "string"
+        },
+        "gross_weight_uom": {
+          "type": "string"
+        },
+        "net_weight": {
+          "type": "string"
+        },
+        "net_weight_uom": {
+          "type": "string"
+        },
+        "manufacturer_of_trade_item_location_name": {
+          "type": "string"
+        },
+        "country_of_origin": {
+          "type": "string"
+        },
+        "sell_by_date": {
+          "type": "string"
+        },
+        "first_freeze_date": {
+          "type": "string"
+        },
+        "item_expiration_date": {
+          "type": "string"
+        },
+        "best_before_date": {
+          "type": "string"
+        },
+        "harvest_start_date": {
+          "type": "string"
+        },
+        "harvest_end_date": {
+          "type": "string"
+        },
+        "farm_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/farm"
+          }
+        },
+        "growing_method_code": {
+          "type": "string"
+        },
+        "production_method_for_fish_and_seafood": {
+          "type": "string"
+        },
+        "unloading_port": {
+          "type": "string"
+        },
+        "vessel_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/vessel"
+          }
+        }
+      }
+    },
+    "farm": {
+      "title": "farm",
+      "type": "object",
+      "properties": {
+        "identification": {
+          "type": "string"
+        },
+        "identification_type": {
+          "type": "string"
+        }
+      }
+    },
+    "vessel": {
+      "title": "vessel",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "productsPostRequest": {
+      "title": "productsPostRequest",
+      "type": "object",
+      "properties": {
+        "entity_id": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "asset_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "product_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "productsPutRequest": {
+      "title": "productsPutRequest",
+      "type": "object",
+      "properties": {
+        "entity_id": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "asset_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "locationsPostRequest": {
+      "title": "locationsPostRequest",
+      "example": {
+        "entity_id": "string",
+        "location_type": "FARM",
+        "location_name": "Bia Orchards",
+        "street_address": "123 Jakers Street",
+        "city": "Kimberton",
+        "country_code": "US",
+        "po_box_number": "null",
+        "postal_code": "19460",
+        "state": "PA",
+        "latitude": 0,
+        "longitude": 0
+      },
+      "type": "object",
+      "properties": {
+        "entity_id": {
+          "type": "string"
+        },
+        "location_type": {
+          "type": "string"
+        },
+        "street_address": {
+          "type": "string"
+        },
+        "location_name": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country_code": {
+          "type": "string"
+        },
+        "po_box_number": {
+          "type": "string"
+        },
+        "postal_code": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "locationsPutRequest": {
+      "title": "locationsPutRequest",
+      "example": {
+        "id": "9876543example",
+        "entity_id": "string",
+        "location_type": "FARM",
+        "location_name": "Bia Orchards",
+        "street_address": "123 Jakers Street",
+        "city": "Kimberton",
+        "country_code": "US",
+        "po_box_number": "null",
+        "postal_code": "19460",
+        "state": "PA",
+        "latitude": 0,
+        "longitude": 0
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "entity_id": {
+          "type": "string"
+        },
+        "location_type": {
+          "type": "string"
+        },
+        "street_address": {
+          "type": "string"
+        },
+        "location_name": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country_code": {
+          "type": "string"
+        },
+        "po_box_number": {
+          "type": "string"
+        },
+        "postal_code": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "metadataPostRequest": {
+      "title": "metadataPostRequest",
+      "example": {
+        "metadata_timestamp": "2019-03-13T14:52:48.350Z",
+        "metadata_content_type": "shipping delay",
+        "product_ids": [
+          "42354754jk5k345"
+        ],
+        "location_ids": [
+          "923901832"
+        ],
+        "customData": {
+          "description": "Shipment was delayed for two days due to a weather system.",
+          "spoilageRisk": "high"
+        }
+      },
+      "type": "object",
+      "properties": {
+        "entity_id": {
+          "type": "string"
+        },
+        "metadata_timestamp": {
+          "type": "string"
+        },
+        "metadata_content_type": {
+          "type": "string"
+        },
+        "event_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "asset_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "location_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "customData": {
+          "type": "object"
+        }
+      }
+    },
+    "metadataPutRequest": {
+      "title": "metadataPutRequest",
+      "example": {
+        "metadata_id": "3jh43u2i5u3i4",
+        "metadata_timestamp": "2019-03-13T14:52:48.350Z",
+        "metadata_content_type": "shipping delay",
+        "product_ids": [
+          "42354754jk5k345"
+        ],
+        "location_ids": [
+          "923901832"
+        ],
+        "customData": {
+          "description": "Shipment was delayed for two days due to a weather system.",
+          "spoilageRisk": "low"
+        }
+      },
+      "type": "object",
+      "properties": {
+        "metadata_id":{
+          "type":"string"
+        },
+        "entity_id": {
+          "type": "string"
+        },
+        "metadata_timestamp": {
+          "type": "string"
+        },
+        "metadata_content_type": {
+          "type": "string"
+        },
+        "event_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "asset_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "location_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "customData": {
+          "type": "object"
+        }
+      }
+    },
+    "metadata": {
+      "title": "metadata",
+      "example": {
+        "metadata_id": "3jh43u2i5u3i4",
+        "metadata_timestamp": "2019-03-13T14:52:48.350Z",
+        "metadata_content_type": "shipping delay",
+        "product_ids": [
+          "42354754jk5k345"
+        ],
+        "location_ids": [
+          "923901832"
+        ],
+        "customData": {
+          "description": "Shipment was delayed for two days due to a weather system.",
+          "spoilageRisk": "low"
+        }
+      },
+      "type": "object",
+      "properties": {
+        "metadata_id":{
+          "type":"string"
+        },
+        "entity_id": {
+          "type": "string"
+        },
+        "metadata_timestamp": {
+          "type": "string"
+        },
+        "metadata_content_type": {
+          "type": "string"
+        },
+        "event_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "asset_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "location_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "customData": {
+          "type": "object"
+        }
+      }
+    },
+    "events": {
+      "title": "events",
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/event"
+          }
+        },
+        "next": {
+          "$ref": "#/definitions/next"
+        }
+      }
+    },
+    "event": {
+      "title": "event",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "entity_id": {
+          "type": "string"
+        },
+        "event_type": {
+          "description": "observation, transformation, aggregation, disaggregation, commission, decommission,",
+          "example": "aggregation",
+          "type": "string"
+        },
+        "event_time": {
+          "type": "string"
+        },
+        "transformation_id": {
+          "type": "string"
+        },
+        "biz_step": {
+          "type": "string"
+        },
+        "disposition": {
+          "type": "string"
+        },
+        "read_point_location_id": {
+          "type": "string"
+        },
+        "read_point_sub_location_id": {
+          "type": "string"
+        },
+        "biz_location_id": {
+          "type": "string"
+        },
+        "biz_sub_location_id": {
+          "type": "string"
+        },
+        "asset_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "parent_asset_id": {
+          "description": "applies to aggregation and disaggregation events",
+          "type": "string"
+        },
+        "child_asset_ids": {
+          "description": "applies to aggregation and disaggregation events",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "quantities": {
+          
+          }
+        },
+        "child_quantities": {
+          "description": "applies to aggregation and disaggregation events",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/assetQty"
+          }
+        },
+        "input_asset_ids": {
+          "description": "applies to transformation events",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "input_quantities": {
+          "description": "applies to transformation events",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/assetQty"
+          }
+        },
+        "output_asset_ids": {
+          "description": "applies to transformation events",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "output_quantities": {
+          "description": "applies to transformation events",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/assetQty"
+          }
+        },
+        "source_location_ids": {
+          "description": "list of source GLNs",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_sub_location_ids": {
+          "description": "list of source SGLNs",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "destination_location_ids": {
+          "description": "list of destination GLNs",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "destination_sub_location_ids": {
+          "description": "list of destination SGLNs",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_locations": {
+          "description": "list of source GLNs and types",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/logistic_unit_identification"
+          }
+        },
+        "source_sub_locations": {
+          "description": "list of source SGLNs and types",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/logistic_unit_identification"
+          }
+        },
+        "destination_locations": {
+          "description": "list of destination GLNs and types",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/logistic_unit_identification"
+          }
+        },
+        "destination_sub_locations": {
+          "description": "list of destination SGLNs and types",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/logistic_unit_identification"
+          }
+        },
+        "transaction_ids": {
+          "description": "list of business transaction identifiers and corresponding business transaction type identifier",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/transactionIds"
+          }
+        }
+      },
+      "da_logistic_units": {
+        "title": "da_logistic_units",
+        "type": "object",
+        "properties": {
+          "estimated_delivery_timestamp_at_consignee": {
+            "type": "string"
+          },
+          "logistic_unit_identification": {
+            "$ref": "#/definitions/logistic_unit_identification"
+          },
+          "package_type_code": {
+            "type": "string"
+          },
+          "line_items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/da_line_items"
+            }
+          }
+        }
+      },
+      "da_logistic_units_po": {
+        "title": "da_logistic_units_po",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "line_item_number": {
+            "type": "number",
+            "format": "double"
+          },
+          "creation_timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "da_line_items": {
+        "title": "da_line_items",
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "string"
+          },
+          "trade_item": {
+            "$ref": "#/definitions/da_trade_item"
+          },
+          "line_item_number": {
+            "type": "number",
+            "format": "double"
+          },
+          "country_of_origin": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "uom": {
+            "type": "string"
+          },
+          "requested_product_id": {
+            "type": "string"
+          },
+          "purchase_order": {
+            "$ref": "#/definitions/da_logistic_units_po"
+          }
+        }
+      },
+      "da_trade_item": {
+        "title": "da_trade_item",
+        "type": "object",
+        "properties": {
+          "item_data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ItemDatum"
+            }
+          }
+        }
+      },
+      "receiveAdvices": {
+        "title": "receiveAdvices",
+        "type": "object",
+        "properties": {
+          "receive_advices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/receiveAdvice"
+            }
+          }
+        }
+      },
+      "receiveAdvice": {
+        "title": "receiveAdvice",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "object"
+          },
+          "transaction_id": {
+            "type": "string"
+          },
+          "asset_id": {
+            "type": "string"
+          },
+          "despatch_advice_id": {
+            "type": "string"
+          },
+          "creation_timestamp": {
+            "type": "string"
+          },
+          "receiving_timestamp": {
+            "type": "string"
+          },
+          "shipper_location_id": {
+            "type": "string"
+          },
+          "receiver_location_id": {
+            "type": "string"
+          },
+          "ship_to_location_id": {
+            "type": "string"
+          },
+          "transport_information": {
+            "$ref": "#/definitions/TransportInformation1"
+          },
+          "logistic_units": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ra_logistic_units"
+            }
+          },
+          "bill_of_lading_number": {
+            "type": "string"
+          }
+        }
+      },
+      "ra_logistic_units": {
+        "title": "ra_logistic_units",
+        "type": "object",
+        "properties": {
+          "line_items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ra_line_items"
+            }
+          },
+          "unit_id": {
+            "$ref": "#/definitions/ra_unit_id"
+          },
+          "package_type_code": {
+            "type": "string"
+          }
+        }
+      },
+      "ra_line_items": {
+        "title": "ra_line_items",
+        "type": "object",
+        "properties": {
+          "received_uom": {
+            "type": "string"
+          },
+          "requested_product_id": {
+            "type": "string"
+          },
+          "accepted_quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "receiving_condition": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ra_line_items_condition"
+            }
+          },
+          "received_quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "product_id": {
+            "type": "string"
+          },
+          "accepted_uom": {
+            "type": "string"
+          },
+          "despatch_advice": {
+            "$ref": "#/definitions/ra_line_items_da"
+          },
+          "line_item_number": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "ra_line_items_condition": {
+        "title": "ra_line_items_condition",
+        "type": "object",
+        "properties": {
+          "uom": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      },
+      "ra_line_items_da": {
+        "title": "ra_line_items_da",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "line_item_number": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "ra_unit_id": {
+        "title": "ra_unit_id",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "logistic_unit_identification": {
+        "title": "logistic_unit_identification",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+    "eventPostRequest": {
+      "title": "eventPostRequest",
+      "example": {
+        "entity_id": "12entity34",
+        "event_type": "observation",
+        "event_time": "2019-03-13T14:52:48.350Z",
+        "transformation_id": "exampleIDforTransformation",
+        "asset_ids": ["asset0","asset1"],
+        "parent_asset_id": "parentAssetIDExample",
+        "quantities": {
+          "asset_id": "assetIDexample",
+          "quantity": 130,
+          "uom": "uomExample"
+        },
+        "source_location_ids": ["locationID1","locationID2"],
+        "destination_location_ids": ["destinationID1","ldestinationID2"],
+        "transaction_ids":["transaction1","transaction2"]
+      },
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/event"
+          }
+        }
+      }
+    },
+    "eventPutRequest": {
+      "title": "eventPostRequest",
+      "example": {
+        "event_id":"eventIDexample",
+        "entity_id": "12entity34",
+        "event_type": "observation",
+        "event_time": "2019-03-13T14:52:48.350Z",
+        "transformation_id": "exampleIDforTransformation",
+        "asset_ids": ["asset0","asset1"],
+        "parent_asset_id": "parentAssetIDExample",
+        "quantities": {
+          "asset_id": "assetIDexample",
+          "quantity": 130,
+          "uom": "uomExample"
+        },
+        "source_location_ids": ["locationID1","locationID2"],
+        "destination_location_ids": ["destinationID1","ldestinationID2"],
+        "transaction_ids":["transaction1","transaction2"]
+      },
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/event"
+          }
+        }
+      }
+    },
+    "next": {
+      "title": "next",
+      "example": {
+        "href": "http://[examples]/oft/api/outbound/v1/PATH?&start=TOKEN"
+      },
+      "type": "object",
+      "properties": {
+        "href": {
+          "type": "string"
+        }
+      }
+    },
+    "trace": {
+      "title": "trace",
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/traceEvent"
+          }
+        },
+        "output_assets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/innerTrace"
+          }
+        },
+        "input_assets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/innerTrace"
+          }
+        },
+        "parent_assets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/innerTrace"
+          }
+        },
+        "child_assets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/innerTrace"
+          }
+        }
+      }
+    },
+    "innerTrace": {
+      "title": "innerTrace",
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "output_assets": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "input_assets": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "parent_assets": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "child_assets": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "consumerTrace": {
+      "title": "consumerTrace",
+      "type": "object",
+      "properties": {
+        "trace": {
+          "$ref": "#/definitions/trace"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/event"
+          }
+        },
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/product"
+          }
+        },
+        "locations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/location"
+          }
+        },
+        "assets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/assets"
+          }
+        },
+        "metadata": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/metadata"
+          }
+        }
+      }
+    },
+    "traceEvent": {
+      "title": "traceEvent",
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string"
+        }
+      }
+    },
+    "errorModel": {
+      "title": "errorModel",
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "transactionIds": {
+      "title": "transactionIds",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "sourcesPostRequest": {
+      "title": "sourcesPostRequest",
+      "example": {
+        "asset_ids": ["GuacamoleIDexample"],
+        "sources": ["avacadoIDexample", "cilantroIDexample"]
+      },
+      "type": "object",
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sources"
+          }
+        }
+      }
+    },
+    "sourcesPutRequest": {
+      "title": "sourcesPostRequest",
+      "example": {
+        "asset_ids": ["Guacamole"],
+        "sources": ["avacadoIDexample", "cilantroIDexample"]
+      },
+      "type": "object",
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sources"
+          }
+        }
+      }
+    },
+    "sources": {
+      "title": "sources",
+      "type": "object",
+      "properties": {
+        "asset_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AssetId"
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Sources1"
+          }
+        }
+      }
+    },
+    "entities": {
+      "title": "entities",
+      "type": "object",
+      "properties": {
+        "entities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/entity"
+          }
+        }
+      }
+    },
+    "entitiesPostRequest": {
+      "title": "eventPostRequest",
+      "example": {
+        "name": "CJ Berries",
+        "company_prefix": "CJB",
+        "asset_id": "assetIDexample",
+        "product_id": "prodIDexample",
+        "location_id": "locationIDexample"
+      },
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/entity"
+          }
+        }
+      }
+    },
+    "entitiesPutRequest": {
+      "title": "eventPostRequest",
+      "example": {
+        "id":"entityIDexample",
+        "name": "CJ Berries",
+        "company_prefix": "CJB",
+        "asset_id": "assetIDexample",
+        "product_id": "prodIDexample",
+        "location_id": "locationIDexample"
+      },
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/entity"
+          }
+        }
+      }
+    },
+    "entity": {
+      "title": "entity",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "company_prefix": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "asset_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "product_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "location_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "invoices": {
+      "title": "invoices",
+      "type": "object",
+      "properties": {
+        "invoices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/invoice"
+          }
+        }
+      }
+    },
+    "invoice": {
+      "title": "invoice",
+      "type": "object",
+      "properties": {
+        "transaction_id": {
+          "type": "string"
+        },
+        "asset_id": {
+          "type": "string"
+        },
+        "creation_timestamp": {
+          "type": "string"
+        },
+        "buyer_location_id": {
+          "type": "string"
+        },
+        "seller_location_id": {
+          "type": "string"
+        },
+        "payer_location_id": {
+          "type": "string"
+        },
+        "payee_location_id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "totals": {
+          "$ref": "#/definitions/Totals"
+        },
+        "delivery_terms": {
+          "$ref": "#/definitions/DeliveryTerms"
+        },
+        "line_items": {
+          "$ref": "#/definitions/LineItems"
+        },
+        "levied_duty_fee_tax": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LeviedDutyFeeTax"
+          }
+        },
+        "item_price_exclusive_allowances_charges": {
+          "$ref": "#/definitions/ItemPriceExclusiveAllowancesCharges"
+        },
+        "extension": {
+          "$ref": "#/definitions/Extension"
+        },
+        "purchase_order": {
+          "$ref": "#/definitions/da_logistic_units_po"
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "item_price_base_quantity": {
+          "$ref": "#/definitions/ItemPriceBaseQuantity1"
+        },
+        "despatch_advice": {
+          "$ref": "#/definitions/ra_line_items_da"
+        },
+        "line_item_number": {
+          "type": "number",
+          "format": "double"
+        },
+        "invoiced_quantity": {
+          "$ref": "#/definitions/InvoicedQuantity"
+        }
+      }
+    },
+    "AssetId": {
+      "title": "AssetId",
+      "type": "object",
+      "properties": {
+        "asset_id": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string"
+        }
+      }
+    },
+    "CurrencyExchangeRateInformation": {
+      "title": "CurrencyExchangeRateInformation",
+      "type": "object",
+      "properties": {
+        "conversion_from_code": {
+          "type": "string"
+        },
+        "exchange_rate": {
+          "type": "number",
+          "format": "double"
+        },
+        "conversion_to_code": {
+          "type": "string"
+        }
+      }
+    },
+    "DeliveryTerms": {
+      "title": "DeliveryTerms",
+      "type": "object",
+      "properties": {
+        "incoterms_code": {
+          "type": "string"
+        },
+        "location_id": {
+          "type": "object"
+        },
+        "alternate_terms": {
+          "type": "object"
+        },
+        "cost_payment": {
+          "type": "string"
+        },
+        "instructions": {
+          "type": "string"
+        }
+      }
+    },
+    "assetsTraceResponse": {
+      "title": "assetsTraceResponse",
+      "type": "object",
+      "properties": {
+        "trace": {
+          "$ref": "#/definitions/trace"
+        }
+      }
+    },
+    "Error": {
+      "title": "Error",
+      "type": "object",
+      "properties": {
+        "code": {
+          "example": "invalid_inputs",
+          "type": "string"
+        },
+        "message": {
+          "example": "Invalid value 10000 provided for input parameter limit. limit must be an integer greater than or equal to 1 and less than or equal to 1000.",
+          "type": "string"
+        },
+        "more_info": {
+          "type": "string"
+        }
+      }
+    },
+    "Extension": {
+      "title": "Extension",
+      "type": "object",
+      "properties": {
+        "currency_exchange_rate_information": {
+          "$ref": "#/definitions/CurrencyExchangeRateInformation"
+        }
+      }
+    },
+    "InvoicedQuantity": {
+      "title": "InvoicedQuantity",
+      "type": "object",
+      "properties": {
+        "uom": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "string"
+        }
+      }
+    },
+    "ItemDatum": {
+      "title": "ItemDatum",
+      "type": "object",
+      "properties": {
+        "item_volume": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ItemVolume"
+          }
+        },
+        "best_before_timestamp": {
+          "type": "string"
+        },
+        "lot_number": {
+          "type": "string"
+        },
+        "item_weight": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ItemWeight"
+          }
+        },
+        "batch_number": {
+          "type": "string"
+        }
+      }
+    },
+    "ItemPriceBaseQuantity": {
+      "title": "ItemPriceBaseQuantity",
+      "type": "object",
+      "properties": {
+        "uom": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "ItemPriceBaseQuantity1": {
+      "title": "ItemPriceBaseQuantity1",
+      "type": "object",
+      "properties": {
+        "uom": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "string"
+        }
+      }
+    },
+    "ItemPriceExclusiveAllowancesCharges": {
+      "title": "ItemPriceExclusiveAllowancesCharges",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "currency_code": {
+          "type": "string"
+        }
+      }
+    },
+    "ItemVolume": {
+      "title": "ItemVolume",
+      "type": "object",
+      "properties": {
+        "uom": {
+          "type": "string"
+        },
+        "measurement": {
+          "type": "string"
+        },
+        "measurement_type_code": {
+          "type": "string"
+        }
+      }
+    },
+    "ItemWeight": {
+      "title": "ItemWeight",
+      "type": "object",
+      "properties": {
+        "uom": {
+          "type": "string"
+        },
+        "measurement": {
+          "type": "string"
+        },
+        "measurement_type_code": {
+          "type": "string"
+        }
+      }
+    },
+    "LeviedDutyFeeTax": {
+      "title": "LeviedDutyFeeTax",
+      "type": "object",
+      "properties": {
+        "tax_percentage": {
+          "type": "string"
+        },
+        "tax_amount": {
+          "$ref": "#/definitions/TaxAmount"
+        },
+        "tax_type_code": {
+          "type": "string"
+        }
+      }
+    },
+    "LineItems": {
+      "title": "LineItems",
+      "type": "object",
+      "properties": {
+        "ordered_quantity": {
+          "$ref": "#/definitions/OrderedQuantity"
+        }
+      }
+    },
+    "NetPrice": {
+      "title": "NetPrice",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "currency_code": {
+          "type": "string"
+        }
+      }
+    },
+    "Note": {
+      "title": "Note",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "language_code": {
+          "type": "string"
+        }
+      }
+    },
+    "OrderedQuantity": {
+      "title": "OrderedQuantity",
+      "type": "object",
+      "properties": {
+        "uom": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "string"
+        }
+      }
+    },
+    "Sources1": {
+      "title": "Sources1",
+      "type": "object",
+      "properties": {
+        "hash": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        }
+      }
+    },
+    "TaxAmount": {
+      "title": "TaxAmount",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "currency_code": {
+          "type": "string"
+        }
+      }
+    },
+    "TaxSubtotal": {
+      "title": "TaxSubtotal",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "format": "double"
+        },
+        "currency_code": {
+          "type": "string"
+        }
+      }
+    },
+    "Totals": {
+      "title": "Totals",
+      "type": "object",
+      "properties": {
+        "tax_subtotal": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaxSubtotal"
+          }
+        }
+      }
+    },
+    "TransportInformation": {
+      "title": "TransportInformation",
+      "type": "object",
+      "properties": {
+        "bill_of_lading_number": {
+          "type": "string"
+        },
+        "transport_means_id": {
+          "type": "string"
+        }
+      }
+    },
+    "TransportInformation1": {
+      "title": "TransportInformation1",
+      "type": "object",
+      "properties": {
+        "transport_means_id": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Products",
+      "description": "APIs for products"
+    },
+    {
+      "name": "Locations",
+      "description": "APIs for locations"
+    },
+    {
+      "name": "Metadata",
+      "description": "APIS for metadata"
+    },
+    {
+      "name": "Events",
+      "description": "APIs for events"
+    },
+    {
+      "name": "Assets",
+      "description": "APIs for assets"
+    },
+    {
+      "name": "Entities",
+      "description": "APIs for entities"
+    },
+    {
+      "name": "Sources",
+      "description": "APIs for sources"
+    }
+  ]
+}
