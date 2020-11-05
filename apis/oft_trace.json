@@ -2018,7 +2018,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/source"
+              "$ref": "#/definitions/sources"
             },
             "headers": {}
           },
