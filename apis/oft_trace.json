@@ -1113,7 +1113,7 @@
           "200": {
             "description": "search results matching criteria",
             "schema": {
-              "$ref": "#/definitions/lotsSerials"
+              "$ref": "#/definitions/assets"
             },
             "headers": {}
           },
@@ -3332,10 +3332,10 @@
             "$ref": "#/definitions/location"
           }
         },
-        "lots_and_serials": {
+        "assets": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/lotSerial"
+            "$ref": "#/definitions/assets"
           }
         },
         "metadata": {
