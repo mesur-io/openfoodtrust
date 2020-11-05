@@ -613,7 +613,7 @@
             "required": false,
             "description": "Parameters of the metadata to post.",
             "schema": {
-              "$ref": "#/definitions/metaDataPostRequest"
+              "$ref": "#/definitions/metadataPostRequest"
             }
           }
         ],
