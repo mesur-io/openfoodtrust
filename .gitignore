@@ -15,3 +15,6 @@
 # vendor/
 
 docs/index.html
+
+# OS Generated Files
+*.DS_Store
