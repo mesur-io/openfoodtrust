@@ -1825,7 +1825,7 @@
             "required": false,
             "description": "Parameters of the entity record to update.",
             "schema": {
-              "$ref": "#/definitions/entityPutRequest"
+              "$ref": "#/definitions/entitiesPutRequest"
             }
           }
         ],
