@@ -2010,7 +2010,7 @@
             "required": false,
             "description": "Parameters of the source record to update.",
             "schema": {
-              "$ref": "#/definitions/sourcePutRequest"
+              "$ref": "#/definitions/sourcesPutRequest"
             }
           }
         ],
@@ -3486,7 +3486,7 @@
         }
       }
     },
-    "entityPostRequest": {
+    "entitiesPostRequest": {
       "title": "eventPostRequest",
       "example": {
         "name": "CJ Berries",
@@ -3505,7 +3505,7 @@
         }
       }
     },
-    "entityPutRequest": {
+    "entitiesPutRequest": {
       "title": "eventPostRequest",
       "example": {
         "id":"entityIDexample",
