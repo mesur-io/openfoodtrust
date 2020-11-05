@@ -1146,7 +1146,7 @@
             "required": false,
             "description": "Parameters of the asset to post.",
             "schema": {
-              "$ref": "#/definitions/assetPostRequest"
+              "$ref": "#/definitions/assetsPostRequest"
             }
           }
         ],
@@ -1189,7 +1189,7 @@
             "required": false,
             "description": "Parameters of the event to update.",
             "schema": {
-              "$ref": "#/definitions/assetPutRequest"
+              "$ref": "#/definitions/assetsPutRequest"
             }
           }
         ],
