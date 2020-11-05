@@ -2977,6 +2977,176 @@
             }
           }
         }
+      },"da_logistic_units_po": {
+        "title": "da_logistic_units_po",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "line_item_number": {
+            "type": "number",
+            "format": "double"
+          },
+          "creation_timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "receiveAdvices": {
+        "title": "receiveAdvices",
+        "type": "object",
+        "properties": {
+          "receive_advices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/receiveAdvice"
+            }
+          }
+        }
+      },
+      "receiveAdvice": {
+        "title": "receiveAdvice",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "object"
+          },
+          "transaction_id": {
+            "type": "string"
+          },
+          "asset_id": {
+            "type": "string"
+          },
+          "despatch_advice_id": {
+            "type": "string"
+          },
+          "creation_timestamp": {
+            "type": "string"
+          },
+          "receiving_timestamp": {
+            "type": "string"
+          },
+          "shipper_location_id": {
+            "type": "string"
+          },
+          "receiver_location_id": {
+            "type": "string"
+          },
+          "ship_to_location_id": {
+            "type": "string"
+          },
+          "transport_information": {
+            "$ref": "#/definitions/TransportInformation1"
+          },
+          "logistic_units": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ra_logistic_units"
+            }
+          },
+          "bill_of_lading_number": {
+            "type": "string"
+          }
+        }
+      },
+      "ra_logistic_units": {
+        "title": "ra_logistic_units",
+        "type": "object",
+        "properties": {
+          "line_items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ra_line_items"
+            }
+          },
+          "unit_id": {
+            "$ref": "#/definitions/ra_unit_id"
+          },
+          "package_type_code": {
+            "type": "string"
+          }
+        }
+      },
+      "ra_line_items": {
+        "title": "ra_line_items",
+        "type": "object",
+        "properties": {
+          "received_uom": {
+            "type": "string"
+          },
+          "requested_product_id": {
+            "type": "string"
+          },
+          "accepted_quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "receiving_condition": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ra_line_items_condition"
+            }
+          },
+          "received_quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "product_id": {
+            "type": "string"
+          },
+          "accepted_uom": {
+            "type": "string"
+          },
+          "despatch_advice": {
+            "$ref": "#/definitions/ra_line_items_da"
+          },
+          "line_item_number": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "ra_line_items_condition": {
+        "title": "ra_line_items_condition",
+        "type": "object",
+        "properties": {
+          "uom": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      },
+      "ra_line_items_da": {
+        "title": "ra_line_items_da",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "line_item_number": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "ra_unit_id": {
+        "title": "ra_unit_id",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
       },
       "logistic_unit_identification": {
         "title": "logistic_unit_identification",
