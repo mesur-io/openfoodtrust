@@ -2957,6 +2957,18 @@
           }
         }
       },
+      "logistic_unit_identification": {
+        "title": "logistic_unit_identification",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
     "eventPostRequest": {
       "title": "eventPostRequest",
       "example": {
