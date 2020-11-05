@@ -2957,6 +2957,27 @@
           }
         }
       },
+      "da_logistic_units": {
+        "title": "da_logistic_units",
+        "type": "object",
+        "properties": {
+          "estimated_delivery_timestamp_at_consignee": {
+            "type": "string"
+          },
+          "logistic_unit_identification": {
+            "$ref": "#/definitions/logistic_unit_identification"
+          },
+          "package_type_code": {
+            "type": "string"
+          },
+          "line_items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/da_line_items"
+            }
+          }
+        }
+      },
       "logistic_unit_identification": {
         "title": "logistic_unit_identification",
         "type": "object",
