@@ -613,7 +613,7 @@
             "required": false,
             "description": "Parameters of the metadata to post.",
             "schema": {
-              "$ref": "#/definitions/metaDataPostRequest"
+              "$ref": "#/definitions/metadataPostRequest"
             }
           }
         ],
@@ -1113,7 +1113,7 @@
           "200": {
             "description": "search results matching criteria",
             "schema": {
-              "$ref": "#/definitions/lotsSerials"
+              "$ref": "#/definitions/assets"
             },
             "headers": {}
           },
@@ -1146,7 +1146,7 @@
             "required": false,
             "description": "Parameters of the asset to post.",
             "schema": {
-              "$ref": "#/definitions/assetPostRequest"
+              "$ref": "#/definitions/assetsPostRequest"
             }
           }
         ],
@@ -1189,7 +1189,7 @@
             "required": false,
             "description": "Parameters of the event to update.",
             "schema": {
-              "$ref": "#/definitions/assetPutRequest"
+              "$ref": "#/definitions/assetsPutRequest"
             }
           }
         ],
@@ -1825,7 +1825,7 @@
             "required": false,
             "description": "Parameters of the entity record to update.",
             "schema": {
-              "$ref": "#/definitions/entityPutRequest"
+              "$ref": "#/definitions/entitiesPutRequest"
             }
           }
         ],
@@ -2010,7 +2010,7 @@
             "required": false,
             "description": "Parameters of the source record to update.",
             "schema": {
-              "$ref": "#/definitions/sourcePutRequest"
+              "$ref": "#/definitions/sourcesPutRequest"
             }
           }
         ],
@@ -2018,7 +2018,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/source"
+              "$ref": "#/definitions/sources"
             },
             "headers": {}
           },
@@ -2957,6 +2957,242 @@
           }
         }
       },
+      "da_logistic_units": {
+        "title": "da_logistic_units",
+        "type": "object",
+        "properties": {
+          "estimated_delivery_timestamp_at_consignee": {
+            "type": "string"
+          },
+          "logistic_unit_identification": {
+            "$ref": "#/definitions/logistic_unit_identification"
+          },
+          "package_type_code": {
+            "type": "string"
+          },
+          "line_items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/da_line_items"
+            }
+          }
+        }
+      },
+      "da_logistic_units_po": {
+        "title": "da_logistic_units_po",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "line_item_number": {
+            "type": "number",
+            "format": "double"
+          },
+          "creation_timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "da_line_items": {
+        "title": "da_line_items",
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "string"
+          },
+          "trade_item": {
+            "$ref": "#/definitions/da_trade_item"
+          },
+          "line_item_number": {
+            "type": "number",
+            "format": "double"
+          },
+          "country_of_origin": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "uom": {
+            "type": "string"
+          },
+          "requested_product_id": {
+            "type": "string"
+          },
+          "purchase_order": {
+            "$ref": "#/definitions/da_logistic_units_po"
+          }
+        }
+      },
+      "da_trade_item": {
+        "title": "da_trade_item",
+        "type": "object",
+        "properties": {
+          "item_data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ItemDatum"
+            }
+          }
+        }
+      },
+      "receiveAdvices": {
+        "title": "receiveAdvices",
+        "type": "object",
+        "properties": {
+          "receive_advices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/receiveAdvice"
+            }
+          }
+        }
+      },
+      "receiveAdvice": {
+        "title": "receiveAdvice",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "object"
+          },
+          "transaction_id": {
+            "type": "string"
+          },
+          "asset_id": {
+            "type": "string"
+          },
+          "despatch_advice_id": {
+            "type": "string"
+          },
+          "creation_timestamp": {
+            "type": "string"
+          },
+          "receiving_timestamp": {
+            "type": "string"
+          },
+          "shipper_location_id": {
+            "type": "string"
+          },
+          "receiver_location_id": {
+            "type": "string"
+          },
+          "ship_to_location_id": {
+            "type": "string"
+          },
+          "transport_information": {
+            "$ref": "#/definitions/TransportInformation1"
+          },
+          "logistic_units": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ra_logistic_units"
+            }
+          },
+          "bill_of_lading_number": {
+            "type": "string"
+          }
+        }
+      },
+      "ra_logistic_units": {
+        "title": "ra_logistic_units",
+        "type": "object",
+        "properties": {
+          "line_items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ra_line_items"
+            }
+          },
+          "unit_id": {
+            "$ref": "#/definitions/ra_unit_id"
+          },
+          "package_type_code": {
+            "type": "string"
+          }
+        }
+      },
+      "ra_line_items": {
+        "title": "ra_line_items",
+        "type": "object",
+        "properties": {
+          "received_uom": {
+            "type": "string"
+          },
+          "requested_product_id": {
+            "type": "string"
+          },
+          "accepted_quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "receiving_condition": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ra_line_items_condition"
+            }
+          },
+          "received_quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "product_id": {
+            "type": "string"
+          },
+          "accepted_uom": {
+            "type": "string"
+          },
+          "despatch_advice": {
+            "$ref": "#/definitions/ra_line_items_da"
+          },
+          "line_item_number": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "ra_line_items_condition": {
+        "title": "ra_line_items_condition",
+        "type": "object",
+        "properties": {
+          "uom": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      },
+      "ra_line_items_da": {
+        "title": "ra_line_items_da",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "line_item_number": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "ra_unit_id": {
+        "title": "ra_unit_id",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
       "logistic_unit_identification": {
         "title": "logistic_unit_identification",
         "type": "object",
@@ -3141,10 +3377,10 @@
             "$ref": "#/definitions/location"
           }
         },
-        "lots_and_serials": {
+        "assets": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/lotSerial"
+            "$ref": "#/definitions/assets"
           }
         },
         "metadata": {
@@ -3250,7 +3486,7 @@
         }
       }
     },
-    "entityPostRequest": {
+    "entitiesPostRequest": {
       "title": "eventPostRequest",
       "example": {
         "name": "CJ Berries",
@@ -3269,7 +3505,7 @@
         }
       }
     },
-    "entityPutRequest": {
+    "entitiesPutRequest": {
       "title": "eventPostRequest",
       "example": {
         "id":"entityIDexample",
