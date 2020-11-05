@@ -2977,7 +2977,8 @@
             }
           }
         }
-      },"da_logistic_units_po": {
+      },
+      "da_logistic_units_po": {
         "title": "da_logistic_units_po",
         "type": "object",
         "properties": {
@@ -2990,6 +2991,50 @@
           },
           "creation_timestamp": {
             "type": "string"
+          }
+        }
+      },
+      "da_line_items": {
+        "title": "da_line_items",
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "string"
+          },
+          "trade_item": {
+            "$ref": "#/definitions/da_trade_item"
+          },
+          "line_item_number": {
+            "type": "number",
+            "format": "double"
+          },
+          "country_of_origin": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "uom": {
+            "type": "string"
+          },
+          "requested_product_id": {
+            "type": "string"
+          },
+          "purchase_order": {
+            "$ref": "#/definitions/da_logistic_units_po"
+          }
+        }
+      },
+      "da_trade_item": {
+        "title": "da_trade_item",
+        "type": "object",
+        "properties": {
+          "item_data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ItemDatum"
+            }
           }
         }
       },
