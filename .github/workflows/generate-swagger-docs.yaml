@@ -38,10 +38,22 @@ jobs:
           version: '^3.0.0'
           spec-file: oft_documents.json
       
+      - name: "Generate Swagger UI: trace"
+        uses: Legion2/swagger-ui-action@v1
+        with:
+          output: swagger-ui/trace
+          version: '^3.0.0'
+          spec-file: oft_trace.json
+
       - name: redoc-cli docs
         uses: seeebiii/redoc-cli-github-action@v9
         with:
-          args: 'bundle oft_documents.json --output swagger-ui/index.html'
+          args: 'bundle oft_documents.json --output swagger-ui/document_api.html'
+
+      - name: redoc-cli docs
+        uses: seeebiii/redoc-cli-github-action@v9
+        with:
+          args: 'bundle oft_trace.json --output swagger-ui/trace_api.html'
 
       - name: "Upload Generated Docs"
         uses: actions/upload-artifact@v2
