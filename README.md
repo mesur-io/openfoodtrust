@@ -42,11 +42,17 @@ $ redoc-cli bundle ./apis/oft_documents.json --output docs/index.html
 $ http-serve ./docs
 ```
 
+**View the APIs online**
+
+Use the links below to see the existing API documentation hosted online by Mesur.io
+* [Documents API](https://mesur-io.github.io/openfoodtrust/api/document_api.html)
+* [Trace API](https://mesur-io.github.io/openfoodtrust/api/trace_api.html)
+
 ## Key Roadmap Items
 - [X] Initial project definition and requirements gathering
 - [ ] Initial API Definitions (In-progress)
-    - [X] Documents
-    - [ ] Trace
+    - [X] Documents 
+    - [X] Trace
     - [ ] Authorization
     - [ ] Insights
 - [ ] API Implementiation (In-progress)
