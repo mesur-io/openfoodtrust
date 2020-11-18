@@ -1,0 +1,77 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Open Food Trust API",
+      "description": "The <b>Open Food Trust</b> API provides insights into the food and ag supply chain with an emphasis towards supporting initiatives around sustainability, reduction of food waste, and to enable track and trace of agricultural products in a reliable and secure manner.\n\n",
+      "contact": {},
+      "version": "0.0.1"
+    },
+    "servers": [
+      {
+        "url": "http://[example]/oft/api/info/v1",
+        "variables": {}
+      }
+    ],
+    "paths": {
+      "/info": {
+        "get": {
+            "tags": [
+              "info"
+            ],
+            "summary": "Retrieves Version and Other Informatoin",
+            "description": "Gets version and other information related to the current deployment of Open Food Trust",
+            "operationId": "info",
+            "parameters": [
+            ],
+            "responses": {
+              "200": {
+                "description": "OK",
+                "headers": {},
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                            "type": "string"
+                      },
+                      "description": "OK"
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "Bad Request",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/InternalServerError"
+                    }
+                  }
+                }
+              },
+              "403": {
+                "description": "Forbidden",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/InternalServerError"
+                    }
+                  }
+                }
+              },
+              "500": {
+                "description": "Internal Server Error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/InternalServerError"
+                    }
+                  }
+                }
+              }
+            },
+            "deprecated": false
+          }
+        }
+    }
+}

@@ -15,6 +15,7 @@
 # vendor/
 
 docs/index.html
+openapi.yaml
 
 # OS Generated Files
 *.DS_Store

@@ -1,0 +1,38 @@
+{
+  "name": "openfoodtrust",
+  "version": "0.1.0",
+  "description": "Open Food Trust provides insights into the food and ag supply chain with an emphasis towards supporting initiatives around sustainability, reduction of food waste, and to enable track and trace of agricultural products in a reliable and secure manner.",
+  "main": " ",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "openapi join ./apis/*.json; redoc-cli bundle --output ./docs/index.html ./openapi.yaml"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mesur-io/openfoodtrust.git"
+  },
+  "keywords": [
+    "food",
+    "agriculture",
+    "food",
+    "trust",
+    "sustainability",
+    "verifiable",
+    "credentials",
+    "decentralized",
+    "identifiers",
+    "distributed",
+    "ledger",
+    "dlt",
+    "blockchain"
+  ],
+  "author": "mprorock@mesur.io",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/mesur-io/openfoodtrust/issues"
+  },
+  "homepage": "https://mesur.io/"
+}
