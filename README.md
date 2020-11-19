@@ -27,6 +27,7 @@ These enryption requirements effectively eliminate the large permissionless bloc
 ## Building the API Docs
 **Get the reqs**
 ```
+$ npm install -g redoc-cli
 $ npm install -g @redocly/openapi-cli
 # handy little quick web server if you want it
 $ npm install -f http-serve

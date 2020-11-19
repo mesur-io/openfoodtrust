@@ -15,6 +15,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '14.x'
+      - run: npm install -g redoc-cli
       - run: npm install -g @redocly/openapi-cli
       - run: npm install 
       - run: npm run build
