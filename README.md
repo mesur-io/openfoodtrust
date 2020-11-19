@@ -28,33 +28,32 @@ These enryption requirements effectively eliminate the large permissionless bloc
 **Get the reqs**
 ```
 $ npm install -g @redocly/openapi-cli
-$ npm install -g redoc-cli
 # handy little quick web server if you want it
 $ npm install -f http-serve
 ```
 
-**Build it**
+**Build the Docs themselves**
 ```
 # This is the key build command for the API docs, a build script will be following eventually
 # some preceeding code to merge up api specs, likely using speccy
-$ redoc-cli bundle ./apis/oft_documents.json --output docs/index.html
+$ npm run build
 # this is optional, you can also serve the generated spec directly using redoc-cli
 $ http-serve ./docs
 ```
 
 **View the APIs online**
 
-Use the links below to see the existing API documentation hosted online by Mesur.io
-* [Documents API](https://mesur-io.github.io/openfoodtrust/api/document_api.html)
-* [Trace API](https://mesur-io.github.io/openfoodtrust/api/trace_api.html)
+Use the link(s) below to see the existing API documentation hosted online by Mesur.io
+* [Open Food Trust API](https://mesur-io.github.io/openfoodtrust/index.html)
 
 ## Key Roadmap Items
 - [X] Initial project definition and requirements gathering
 - [ ] Initial API Definitions (In-progress)
     - [X] Documents 
     - [X] Trace
-    - [ ] Authorization
+    - [ ] Credentials (In-progress)
     - [ ] Insights
+    - [ ] Authorization
 - [ ] API Implementiation (In-progress)
 
 ### External and Related Miscellaneous Items

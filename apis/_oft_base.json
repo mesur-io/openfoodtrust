@@ -2,9 +2,9 @@
     "openapi": "3.0.0",
     "info": {
       "title": "Open Food Trust API",
-      "description": "The <b>Open Food Trust</b> API provides insights into the food and ag supply chain with an emphasis towards supporting initiatives around sustainability, reduction of food waste, and to enable track and trace of agricultural products in a reliable and secure manner.\n\n",
+      "description": "<img src=\"./img/oft-logo-dark-bg.png\" alt=\"Open Food Trust\"/>The <b>Open Food Trust</b> API provides insights into the food and ag supply chain with an emphasis towards supporting initiatives around sustainability, reduction of food waste, and to enable track and trace of agricultural products in a reliable and secure manner.\n\n",
       "contact": {},
-      "version": "0.0.1"
+      "version": "0.1.0"
     },
     "servers": [
       {
