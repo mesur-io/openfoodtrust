@@ -16,6 +16,7 @@ jobs:
         with:
           node-version: '14.x'
       - run: npm install -g @redocly/openapi-cli
+      - run: npm install 
       - run: npm run build
       - name: "Upload Generated Docs"
         uses: actions/upload-artifact@v2
