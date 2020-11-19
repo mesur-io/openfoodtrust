@@ -21,7 +21,7 @@ jobs:
       - name: "Upload Generated Docs"
         uses: actions/upload-artifact@v2
         with:
-          name: doc-files
+          name: generated-docs
           path: docs
 
   deploy:
