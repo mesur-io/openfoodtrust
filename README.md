@@ -61,6 +61,7 @@ Use the link(s) below to see the existing API documentation hosted online by Mes
 
 Things we like and are leveraging as a part of this project:
 * [JSON-LD](https://json-ld.org/)
+* [vc-http-api](https://github.com/w3c-ccg/vc-http-api)
 * [Traceability Vocab](https://github.com/w3c-ccg/traceability-vocab/)
 * [Universal Wallet](https://github.com/w3c-ccg/universal-wallet-interop-spec/)
 * [Sidetree](https://github.com/transmute-industries/sidetree.js)
