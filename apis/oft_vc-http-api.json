@@ -281,7 +281,7 @@
           "description": "A JSON-LD Verifiable Credential Issuer.",
           "oneOf": [
             {
-              "type": "string"
+              "type": "object"
             },
             {
               "type": "object",

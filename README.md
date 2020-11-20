@@ -30,7 +30,7 @@ These enryption requirements effectively eliminate the large permissionless bloc
 $ npm install -g redoc-cli
 $ npm install -g @redocly/openapi-cli
 # handy little quick web server if you want it
-$ npm install -f http-serve
+$ npm install -g http-serve
 ```
 
 **Build the Docs themselves**
@@ -52,7 +52,7 @@ Use the link(s) below to see the existing API documentation hosted online by Mes
 - [ ] Initial API Definitions (In-progress)
     - [X] Documents 
     - [X] Trace
-    - [ ] Credentials (In-progress)
+    - [X] Credentials 
     - [ ] Insights
     - [ ] Authorization
 - [ ] API Implementiation (In-progress)
