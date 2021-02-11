@@ -66,3 +66,9 @@ Things we like and are leveraging as a part of this project:
 * [Universal Wallet](https://github.com/w3c-ccg/universal-wallet-interop-spec/)
 * [Sidetree](https://github.com/transmute-industries/sidetree.js)
 * [QLDB](https://docs.aws.amazon.com/qldb/latest/developerguide/what-is.html)
+
+#### Funding, Additional Credits, and Notes
+
+Primary funding for this project is provided by [mesur.io](https://mesur.io) out of a desire to see a sustainable world where all people get the food they need safely.
+
+Portions of the work on this specification have been funded by the United States Department of Homeland Security's (US DHS) Science and Technology Directorate under as well as the US DHS Silicon Valley Innovation Program. The content of this specification does not necessarily reflect the position or the policy of the U.S. Government and no official endorsement should be inferred.
