@@ -11,7 +11,7 @@
   "issuer": {
     "id": "did:key:z6Mki93tJ2rwrDaWTMZcdMShk4xLWf75Fu559dAapKe8pdmX"
   },
-  "issuanceDate": "2020-03-10T04:24:12.164Z",
+  "issuanceDate": "2021-03-17T13:24:16.164Z",
   "credentialSubject": {
     "type": "AgProduct",
     "upc": "0745760422975",
@@ -63,8 +63,8 @@
   },
   "proof": {
     "type": "Ed25519Signature2018",
-    "created": "2021-03-17T14:22:34.105Z",
-    "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..ymNuyTJuslzmxo4M3uImsg2VRnlm9qD7-QnnKg_6n6FxJFnGbNb3ye6zbWe9pOSsM67_rTZwjEuRnUnDf-XTDA",
+    "created": "2021-03-17T14:37:31.973Z",
+    "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..YD7Iq8edfy8o4tqiHHtw6a8GJXW28ZY417bxBSRbpC9JBwnFPYzRAqiR3AOHu2S42Y__8japZILPGmz8yfRRBQ",
     "proofPurpose": "assertionMethod",
     "verificationMethod": "did:key:z6Mki93tJ2rwrDaWTMZcdMShk4xLWf75Fu559dAapKe8pdmX#z6Mki93tJ2rwrDaWTMZcdMShk4xLWf75Fu559dAapKe8pdmX"
   }
