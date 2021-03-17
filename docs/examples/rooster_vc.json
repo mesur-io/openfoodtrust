@@ -1,0 +1,71 @@
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://w3id.org/traceability/v1"
+  ],
+  "id": "urn:uuid:07aa969e-b40d-4c1b-ab46-ded252003ded",
+  "type": [
+    "VerifiableCredential",
+    "AgProduct"
+  ],
+  "issuer": {
+    "id": "did:key:z6Mki93tJ2rwrDaWTMZcdMShk4xLWf75Fu559dAapKe8pdmX"
+  },
+  "issuanceDate": "2020-03-10T04:24:12.164Z",
+  "credentialSubject": {
+    "type": "AgProduct",
+    "upc": "0745760422975",
+    "plu": "",
+    "gtin": "00023700039200",
+    "product": {
+      "type": "Product",
+      "manufacturer": {
+        "type": "Person",
+        "firstName": "Cynthia",
+        "lastName": "Spencer",
+        "email": "info@theprancingchicken.farm",
+        "phoneNumber": "1-555-555-5555",
+        "worksFor": {
+          "type": "Organization",
+          "name": "The Prancing Chicken Farm",
+          "description": "Sustainable pasture raised eggs",
+          "address": {
+            "type": "PostalAddress",
+            "streetAddress": "1210 Holly Creek Ln",
+            "addressLocality": "Chapel Hill",
+            "addressRegion": "North Carolina",
+            "postalCode": "27516",
+            "addressCountry": "United States"
+          },
+          "email": "info@theprancingchicken.farm",
+          "phoneNumber": "1-555-555-5555",
+          "faxNumber": "1-555-555-5555"
+        },
+        "jobTitle": "Farm Master"
+      },
+      "name": "Rooster",
+      "description": "Whole Chicken, Male",
+      "sizeOrAmount": {
+        "type": "QuantitativeValue",
+        "unitCode": "item",
+        "value": "1"
+      },
+      "weight": {
+        "type": "QuantitativeValue",
+        "unitCode": "kg",
+        "value": "4.85"
+      },
+      "sku": "0745760422975"
+    },
+    "scientificName": "Gallus gallus domesticus",
+    "labelImageUrl": "https://raw.githubusercontent.com/mesur-io/openfoodtrust/main/docs/img/rooster.jpg",
+    "labelImageHash": "d6757c35160e8f91d8358a3d8fec28e542fae46f22b88cbcf86f812d5935d9d4"
+  },
+  "proof": {
+    "type": "Ed25519Signature2018",
+    "created": "2021-03-17T14:22:34.105Z",
+    "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..ymNuyTJuslzmxo4M3uImsg2VRnlm9qD7-QnnKg_6n6FxJFnGbNb3ye6zbWe9pOSsM67_rTZwjEuRnUnDf-XTDA",
+    "proofPurpose": "assertionMethod",
+    "verificationMethod": "did:key:z6Mki93tJ2rwrDaWTMZcdMShk4xLWf75Fu559dAapKe8pdmX#z6Mki93tJ2rwrDaWTMZcdMShk4xLWf75Fu559dAapKe8pdmX"
+  }
+}
