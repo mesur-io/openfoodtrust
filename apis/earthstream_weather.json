@@ -64,8 +64,8 @@
         "tags": [
           "Weather"
         ],
-        "summary": "Gets a sum of a particular field over the specified time range and returns it in the response body.",
-        "description": "Gets the aggregate value(s) of a specified field at desired location and over time range",
+        "summary": "Gets daily or hourly weather over the specified time range and returns it in the response body.",
+        "description": "Gets weather data at desired location and over time range",
         "parameters": [
           {
             "in": "path",
@@ -78,7 +78,7 @@
               ]
             },
             "required": true,
-            "description": "type of aggregation to perform",
+            "description": "request parameters to specify time range and location",
             "example": {
               "Field": "all",
               "From": 1590517644,
@@ -284,8 +284,9 @@
         }
       },
       "WeatherResponse": {
-        "type": "object",
-        "description": "Response for aggregate weather data.",
+        "type": "array",
+        "items": {
+                  "type": "object",
         "properties": {
           "IsForecast": {
             "type": "boolean"
@@ -368,6 +369,7 @@
           "SoilMoisture10cm": {
             "type": "number"
           }
+        } 
         }
       }
     }
