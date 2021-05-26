@@ -65,7 +65,75 @@
           "Weather"
         ],
         "summary": "Gets a sum of a particular field over the specified time range and returns it in the response body.",
-        "description": "Gets the sum of a specified field at desired location and over time range",
+        "description": "Gets the aggregate value(s) of a specified field at desired location and over time range",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operation",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "daily",
+                "hourly"
+              ]
+            },
+            "required": true,
+            "description": "type of aggregation to perform",
+            "example": {
+              "Field": "all",
+              "From": 1590517644,
+              "To": 1622053644,
+              "Latitude": 35.883543,
+              "Longitude": -79.016313
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommonRequest"
+              }
+            }
+          },
+          "description": "Parameters for issuing the credential."
+        },
+        "responses": {
+          "200": {
+            "description": "Weather request succeeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeatherResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or malformed input"
+          },
+          "401": {
+            "description": "Unauthorized, authentication required"
+          },
+          "413": {
+            "description": "Payload too large"
+          },
+          "429": {
+            "description": "Rate limit exceeded by too many requests."
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/weather/aggregate/{operation}": {
+      "post": {
+        "tags": [
+          "Weather"
+        ],
+        "summary": "Gets a sum of a particular field over the specified time range and returns it in the response body.",
+        "description": "Gets the aggregate value(s) of a specified field at desired location and over time range",
         "parameters": [
           {
             "in": "path",
@@ -135,7 +203,7 @@
           "properties": {
             "Field": {
               "type": "string",
-              "description": "a field for querying."
+              "description": "a field for querying"
             },
             "Definition": {
               "type": "string",
@@ -188,7 +256,7 @@
       },
       "CommonResponse": {
         "type": "object",
-        "description": "Request for weather data.",
+        "description": "Response for aggregate weather data.",
         "properties": {
           "Field": {
             "type": "string"
@@ -212,6 +280,93 @@
                 "type": "number"
               }
             }
+          }
+        }
+      },
+      "WeatherResponse": {
+        "type": "object",
+        "description": "Response for aggregate weather data.",
+        "properties": {
+          "IsForecast": {
+            "type": "boolean"
+          },
+          "FetchTime": {
+            "type": "number"
+          },
+          "Timezone": {
+            "type": "string"
+          },
+          "Latitude": {
+            "type": "number"
+          },
+          "Longitude": {
+            "type": "number"
+          },
+          "Time": {
+            "type": "number"
+          },
+          "Summary": {
+            "type": "string"
+          },
+          "Icon": {
+            "type": "string"
+          },
+          "SunriseTime": {
+            "type": "number"
+          },
+          "SunsetTime": {
+            "type": "number"
+          },
+          "TemperatureHigh": {
+            "type": "number"
+          },
+          "TemperatureLow": {
+            "type": "number"
+          },
+          "Precipitation": {
+            "type": "number"
+          },
+          "PrecipProbability": {
+            "type": "number"
+          },
+          "Temperature": {
+            "type": "number"
+          },
+          "ApparentTemperature": {
+            "type": "number"
+          },
+          "DewPoint": {
+            "type": "number"
+          },
+          "Humidity": {
+            "type": "number"
+          },
+          "Pressure": {
+            "type": "number"
+          },
+          "WindSpeed": {
+            "type": "number"
+          },
+          "WindGust": {
+            "type": "number"
+          },
+          "WindBearing": {
+            "type": "number"
+          },
+          "CloudCover": {
+            "type": "number"
+          },
+          "UvIndex": {
+            "type": "number"
+          },
+          "Visibility": {
+            "type": "number"
+          },
+          "SoilTemp5cm": {
+            "type": "number"
+          },
+          "SoilMoisture10cm": {
+            "type": "number"
           }
         }
       }
