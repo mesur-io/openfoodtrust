@@ -78,14 +78,7 @@
               ]
             },
             "required": true,
-            "description": "request parameters to specify time range and location",
-            "example": {
-              "Field": "all",
-              "From": 1590517644,
-              "To": 1622053644,
-              "Latitude": 35.883543,
-              "Longitude": -79.016313
-            }
+            "description": "request parameters to specify time range and location"
           }
         ],
         "requestBody": {
@@ -247,7 +240,7 @@
           }
         },
         "example": {
-          "Field": "precipitation",
+          "Field": "all",
           "From": 1590517644,
           "To": 1622053644,
           "Latitude": 35.883543,
