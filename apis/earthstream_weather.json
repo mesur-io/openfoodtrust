@@ -1,0 +1,220 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Earthstream Climate Data",
+    "description": "Climate, Weather, and Risk data by location",
+    "version": "2.2.1",
+    "contact": {
+      "name": "mesur.io",
+      "url": "https://mesur.io"
+    }
+  },
+  "tags": [
+    {
+      "name": "Weather",
+      "description": "Weather specific data"
+    },
+    {
+      "name": "Climate",
+      "description": "Mode broad climate data"
+    },
+    {
+      "name": "Risks",
+      "description": "Modeling results for risks and other advanced areas of concern"
+    }
+  ],
+  "paths": {
+    "/weather/fields": {
+      "get": {
+        "summary": "Gets a list of fields available for querying",
+        "tags": [
+          "Weather"
+        ],
+        "responses": {
+          "200": {
+            "description": "List retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FieldList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or malformed input"
+          },
+          "401": {
+            "description": "Unauthorized, authentication required"
+          },
+          "413": {
+            "description": "Payload too large"
+          },
+          "429": {
+            "description": "Rate limit exceeded by too many requests."
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/weather/{operation}": {
+      "post": {
+        "tags": [
+          "Weather"
+        ],
+        "summary": "Gets a sum of a particular field over the specified time range and returns it in the response body.",
+        "description": "Gets the sum of a specified field at desired location and over time range",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operation",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "sum",
+                "avg",
+                "min",
+                "max",
+                "summary",
+                "daily",
+                "hourly"
+              ]
+            },
+            "required": true,
+            "description": "type of aggregation to perform"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommonRequest"
+              }
+            }
+          },
+          "description": "Parameters for issuing the credential."
+        },
+        "responses": {
+          "200": {
+            "description": "Weather request succeeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommonResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or malformed input"
+          },
+          "401": {
+            "description": "Unauthorized, authentication required"
+          },
+          "413": {
+            "description": "Payload too large"
+          },
+          "429": {
+            "description": "Rate limit exceeded by too many requests."
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FieldList": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "Field": {
+              "type": "string",
+              "description": "a field for querying."
+            },
+            "Definition": {
+              "type": "string",
+              "description": "the description of the field."
+            }
+          },
+          "example": {
+            "Field": "precipitation",
+            "Definition": "Accumulated rainfall over the specified time period"
+          }
+        }
+      },
+      "CommonRequest": {
+        "type": "object",
+        "description": "Request for weather data.",
+        "properties": {
+          "Field": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "From": {
+            "type": "number"
+          },
+          "To": {
+            "type": "number"
+          },
+          "Latitude": {
+            "type": "number"
+          },
+          "Longitude": {
+            "type": "number"
+          }
+        },
+        "example": {
+          "Field": "precipitation",
+          "From": 1590517644,
+          "To": 1622053644,
+          "Latitude": 35.883543,
+          "Longitude": -79.016313
+        }
+      },
+      "CommonResponse": {
+        "type": "object",
+        "description": "Request for weather data.",
+        "properties": {
+          "Field": {
+            "type": "string"
+          },
+          "Latitude": {
+            "type": "number"
+          },
+          "Longitude": {
+            "type": "number"
+          },
+          "Data": {
+            "type": "object",
+            "properties": {
+              "Date": {
+                "type": "number"
+              },
+              "Operation": {
+                "type": "string"
+              },
+              "Value": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
